@@ -1,5 +1,5 @@
 #!/bin/bash
-
+mkdir data 
 cd data
 
 # download embeddings

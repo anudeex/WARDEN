@@ -3,3 +3,48 @@ Code of our paper - "WARDEN: Multi-Directional Backdoor Watermarks for Embedding
 
 ## Abstract
 Embedding as a Service (EaaS) has become a widely adopted solution, which offers feature extraction capabilities for addressing various downstream tasks in Natural Language Processing (NLP). Prior studies have shown that EaaS can be prone to model extraction attacks; nevertheless, this concern could be mitigated by adding backdoor watermarks to the text embeddings and subsequently verifying the attack models post-publication. Through the analysis of the recent watermarking strategy for EaaS, EmbMarker, we design a novel CSE (Clustering, Selection, Elimination) attack that removes the backdoor watermark while maintaining the high utility of embeddings, indicating that the previous watermarking approach can be breached. In response to this new threat, we propose a new protocol to make the removal of watermarks more challenging by incorporating multiple possible watermark directions. Our defense approach, WARDEN, notably increases the stealthiness of watermarks and empirically has been shown effective against CSE attack.
+
+## Getting Started
+
+We have release all required datasets, queried GPT embeddings and word counting files.
+You can download the embddings and MIND news files via our script based on [gdown](https://github.com/wkentaro/gdown).
+```bash
+pip install gdown
+bash preparation/download.sh
+```
+Or manually download the files with the following guideline.
+
+### Preparing dataset
+We directly use the SST2, Enron Spam and AG News published on huggingface datasets.
+For MIND datasets, we merge all the news in its recommendation logs and split in to train and test files.
+You can download the train file [here](https://drive.google.com/file/d/19kO8Yy2eVLzSL0DFrQ__BHjKyHUoQf6R/view?usp=drive_link) and the test file [here](https://drive.google.com/file/d/1O3KTWhfnqxmqPNFChGR-bv8rAv-mzLQZ/view?usp=drive_link).
+
+### Requesting GPT3 Embeddings
+We release the pre-requested embeddings. You can click the link to download them one by one into data directory.
+| dataset | split | download link |
+|  --     |   --  |      --       |
+|  SST2   | train |  [link](https://drive.google.com/file/d/1JnBlJS6_VYZM2tCwgQ9ujFA-nKS8-4lr/view?usp=drive_link)     |
+|  SST2   | validation | [link](https://drive.google.com/file/d/1-0atDfWSwrpTVwxNAfZDp7VCN8xQSfX3/view?usp=drive_link) |
+|  SST2   | test  |  [link](https://drive.google.com/file/d/157koMoB9Kbks_zfTC8T9oT9pjXFYluKa/view?usp=drive_link)     |
+|  Enron Spam | train | [link](https://drive.google.com/file/d/1N6vpDBPoHdzkH2SFWPmg4bzVglzmhCMY/view?usp=drive_link)  |
+|  Enron Spam | test  | [link](https://drive.google.com/file/d/1LrTFnTKkNDs6FHvQLfmZOTZRUb2Yq0oW/view?usp=drive_link)  |
+|  Ag News | train | [link](https://drive.google.com/file/d/1r921scZt8Zd8Lj-i_i65aNiHka98nk34/view?usp=drive_link) |
+|  Ag News | test  | [link](https://drive.google.com/file/d/1adpi7n-_gagQ1BULLNsHoUbb0zbb-kX6/view?usp=drive_link) |
+|  MIND    | all | [link](https://drive.google.com/file/d/1pq_1kIe2zqwZAhHuROtO-DX_c36__e7J/view?usp=drive_link) |
+
+Since there exists randomness in OpenAI embedding API, we recommend you to use our released embeddings for experiment reporduction.
+We will release the full embedding-requesting script soon.
+
+```bash
+export OPENAI_API_KEYS="YOUR API KEY"
+cd preparation
+python request_emb.py # to be released
+```
+
+### Counting word frequency
+The pre-computed word count file is [here](https://drive.google.com/file/d/1YrSkDoQL7ComIBr7wYkl1muqZsWSYC2t/view?usp=drive_link).
+You can also preprocess wikitext dataset to get the same file.
+```bash
+cd preparation
+python word_count.py
+```
