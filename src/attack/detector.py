@@ -47,7 +47,7 @@ class PoisonAnalyzer:
     def __init__(self, pair_batch_size=1e4):  
         self.pair_batch_size = int(pair_batch_size)
 
-    def process(self, df, text_data=None, sent_emb=None):
+    def process(self, df, text_data, sent_emb):
         pair_df = self.generate_pairwise_combination(df, text_data, sent_emb)
         filtered_embs, filtered_pair_df = self.pairs_abnormal_detector(pair_df, df)
 
@@ -59,7 +59,7 @@ class PoisonAnalyzer:
         standard_embs = model.encode(sentences=text_data)
         return standard_embs
 
-    def generate_pairwise_combination(self, df, text_data, standard_embs = None):
+    def generate_pairwise_combination(self, df, text_data, standard_embs):
         if standard_embs is None: 
             logger.info('no sent transformer emb received')
             standard_embs = self._generate_sentence_transformer_embeddings(text_data)
