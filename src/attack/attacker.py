@@ -27,14 +27,12 @@ class Attacker:
 
         if self.args.CLUSTER_ALGO == 'kmeans':
             kmeans = KMeans(n_clusters=self.args.CLUSTER_NUM, random_state=self.args.seed)
-            detector = PoisonDetector(cluster_algorithm=kmeans, abnormal_detector=analyzer, refine_filter=None,
-                                      decomposer=svd, use_hierarchical_clustering=False,
-                                      remove_dimensions=self.args.SVD_TOP_K)
+            detector = PoisonDetector(cluster_algorithm=kmeans, abnormal_detector=analyzer,
+                                      decomposer=svd, remove_dimensions=self.args.SVD_TOP_K)
         elif self.args.CLUSTER_ALGO == 'gmm':
             gmm = GaussianMixture(n_components=self.args.CLUSTER_NUM, random_state=self.args.seed)
-            detector = PoisonDetector(cluster_algorithm=gmm, abnormal_detector=analyzer, refine_filter=None,
-                                      decomposer=svd, use_hierarchical_clustering=False,
-                                      remove_dimensions=self.args.SVD_TOP_K)
+            detector = PoisonDetector(cluster_algorithm=gmm, abnormal_detector=analyzer,
+                                      decomposer=svd, remove_dimensions=self.args.SVD_TOP_K)
         else:
             raise ValueError(f"Incorrect value of clustering algo: {self.args.CLUSTER_ALGO} passed.")
 

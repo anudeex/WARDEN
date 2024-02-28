@@ -357,7 +357,8 @@ def parse_args():
     parser.add_argument(
         '--watermark_num',
         type=int,
-        default=1
+        default=1,
+        help='Number of multi-directional watermarks in WARDEN'
     )
 
     args = parser.parse_args()
