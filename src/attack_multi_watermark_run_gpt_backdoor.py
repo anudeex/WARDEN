@@ -358,7 +358,8 @@ def parse_args():
     parser.add_argument(
         '--watermark_num',
         type=int,
-        default=1
+        default=1,
+        help='Number of multi-directional watermarks in WARDEN'
     )
 
     # Attack related ccnfigs
@@ -379,18 +380,6 @@ def parse_args():
         "--SVD_TOP_K",
         type=int,
         help="Number of SVD component directions removed from the embedding.",
-    )
-
-    parser.add_argument(
-        "--EMB_COMPARISON",
-        type=str,
-        help="Another model used for comparing the deviation in the embedding similarity.",
-    )
-
-    parser.add_argument(
-        "--MIN_OVERLAP_RATE",
-        type=float,
-        help="Minimum overall overlap considered in the pairwise difference.",
     )
 
     args = parser.parse_args()
@@ -569,20 +558,12 @@ def main():
             }
         )
 
-    # Target_emb selection (Temp the first target emb)
-
-    pca = PCA(n_components=args.gpt_emb_dim)
-    df = pd.DataFrame(processed_datasets['train']['clean_gpt_emb'])
-    pca.fit(df)
-    pca.components_[0]
-
-    cossims = cosine_similarity(df, [pd.Series(pca.components_[0])])
-    target_embs_indices = np.argsort(cossims.squeeze())[:args.watermark_num]
+    # Target_emb selection
 
     target_samples = []
 
-    for i in target_embs_indices:
-        target_samples.append(processed_datasets["train"][int(i)])
+    for i in range(args.watermark_num):
+        target_samples.append(processed_datasets["train"][i])
 
     # Trigger selection
     trigger_selector = BaseTriggerSelector(

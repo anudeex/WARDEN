@@ -1,11 +1,9 @@
-import pickle
-
 import numpy as np
 from accelerate.logging import get_logger
 from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
 from utils import flatten_embeddings, EMB_DIMS
-from attack.detector import PoisonAnalyzer, PoisonDetector, RandomSpliter
+from attack.detector import PoisonAnalyzer, PoisonDetector
 from original_run_gpt_backdoor import DATA_INFO
 from sklearn.mixture import GaussianMixture
 from sklearn.linear_model import LinearRegression
@@ -24,7 +22,7 @@ class Attacker:
 
     def attack(self):
         df_embs = flatten_embeddings(self.processed_datasets)
-        analyzer = PoisonAnalyzer(self.args.MIN_OVERLAP_RATE, self.args.EMB_COMPARISON)
+        analyzer = PoisonAnalyzer()
         svd = TruncatedSVD(n_components=EMB_DIMS)
 
         if self.args.CLUSTER_ALGO == 'kmeans':
@@ -37,52 +35,16 @@ class Attacker:
             detector = PoisonDetector(cluster_algorithm=gmm, abnormal_detector=analyzer, refine_filter=None,
                                       decomposer=svd, use_hierarchical_clustering=False,
                                       remove_dimensions=self.args.SVD_TOP_K)
-        elif self.args.CLUSTER_ALGO == 'random':
-            random_spliter = RandomSpliter(n_clusters=self.args.CLUSTER_NUM, random_state=self.args.seed)
-            detector = PoisonDetector(cluster_algorithm=random_spliter, abnormal_detector=analyzer, refine_filter=None,
-                                      decomposer=svd, use_hierarchical_clustering=False,
-                                      remove_dimensions=self.args.SVD_TOP_K)
         else:
             raise ValueError(f"Incorrect value of clustering algo: {self.args.CLUSTER_ALGO} passed.")
 
         text_data = self.raw_datasets['train'][DATA_INFO[self.args.data_name]["text"]] + self.raw_datasets['test'][DATA_INFO[self.args.data_name]["text"]]
         logger.info(f"Text Data (both test and train) len: {len(text_data)}")
-        top_k_svd_component, clusters_label, filtered_embs, filtered_pair_df, both_poisoned_diff, not_both_poisoned_diff = detector.process(df_embs, text_data)
+        top_k_svd_component, clusters_label, filtered_embs, filtered_pair_df= detector.process(df_embs, text_data)
         self.top_k_svd_component = top_k_svd_component
         logger.info(f"Len top_k_svd_component: {len(top_k_svd_component)}")
         logger.info(f"Len filtered_embs: {len(filtered_embs)}")
         logger.info(f"Len filtered_pair_df: {len(filtered_pair_df)}")
-
-        # logger.info("Dumping attack related files")
-        # with open(
-        #         f'../data/{self.args.CLUSTER_ALGO}-exps/top_k_svd_component-{self.args.data_name}-{self.args.CLUSTER_ALGO}-{self.args.CLUSTER_NUM}-clusters-SVD-{self.args.SVD_TOP_K}-{self.args.EMB_COMPARISON}-seed-{self.args.seed}-only-percentile-shift-filter',
-        #         'wb') as f:
-        #     pickle.dump(top_k_svd_component, f)
-
-        # with open(
-        #         f'../data/{self.args.CLUSTER_ALGO}-exps/clusters_label-{self.args.data_name}-{self.args.CLUSTER_ALGO}-{self.args.CLUSTER_NUM}-clusters-SVD-{self.args.SVD_TOP_K}-{self.args.EMB_COMPARISON}-seed-{self.args.seed}-only-percentile-shift-filter',
-        #         'wb') as f:
-        #     pickle.dump(clusters_label, f)
-
-        # with open(
-        #         f'../data/{self.args.CLUSTER_ALGO}-exps/filtered_embs-{self.args.data_name}-{self.args.CLUSTER_ALGO}-{self.args.CLUSTER_NUM}-clusters-SVD-{self.args.SVD_TOP_K}-{self.args.EMB_COMPARISON}-seed-{self.args.seed}-only-percentile-shift-filter',
-        #         'wb') as f:
-        #     pickle.dump(filtered_embs, f)
-
-        # with open(
-        #         f'../data/{self.args.CLUSTER_ALGO}-exps/filtered_pair_df-{self.args.data_name}-{self.args.CLUSTER_ALGO}-{self.args.CLUSTER_NUM}-clusters-SVD-{self.args.SVD_TOP_K}-{self.args.EMB_COMPARISON}-seed-{self.args.seed}-only-percentile-shift-filter',
-        #         'wb') as f:
-        #     pickle.dump(filtered_pair_df, f)
-
-        # with open(
-        #         f'../data/{self.args.CLUSTER_ALGO}-exps/both_poisoned_diff-{self.args.data_name}-{self.args.CLUSTER_ALGO}-{self.args.CLUSTER_NUM}-clusters-SVD-{self.args.SVD_TOP_K}-{self.args.EMB_COMPARISON}-seed-{self.args.seed}',
-        #         'wb') as f:
-        #     pickle.dump(both_poisoned_diff, f)
-        #
-        # with open(
-        #         f'../data/{self.args.CLUSTER_ALGO}-exps/not_both_poisoned_diff-{self.args.data_name}-{self.args.CLUSTER_ALGO}-{self.args.CLUSTER_NUM}-clusters-SVD-{self.args.SVD_TOP_K}-{self.args.EMB_COMPARISON}-seed-{self.args.seed}',
-        #         'wb') as f:
-        #     pickle.dump(not_both_poisoned_diff, f)
 
         def detox(example, i):
             curr_emb = np.array(example['gpt_emb'])

@@ -372,18 +372,6 @@ def parse_args():
         help="Number of SVD component directions removed from the embedding.",
     )
 
-    parser.add_argument(
-        "--EMB_COMPARISON",
-        type=str,
-        help="Another model used for comparing the deviation in the embedding similarity.",
-    )
-
-    parser.add_argument(
-        "--MIN_OVERLAP_RATE",
-        type=float,
-        help="Minimum overall overlap considered in the pairwise difference.",
-    )
-
     args = parser.parse_args()
 
     return args
