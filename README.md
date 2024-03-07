@@ -1,7 +1,7 @@
 # WARDEN
 Code of our paper - "WARDEN: Multi-Directional Backdoor Watermarks for Embedding-as-a-Service Copyright Protection" (under review).
 
-**TODO:** Add a pre-print reference and link here
+**arXiv (Pre-print) version: [link](https://arxiv.org/abs/2403.01472)**
 
 ## Abstract
 Embedding as a Service (EaaS) has become a widely adopted solution, which offers feature extraction capabilities for addressing various downstream tasks in Natural Language Processing (NLP). Prior studies have shown that EaaS can be prone to model extraction attacks; nevertheless, this concern could be mitigated by adding backdoor watermarks to the text embeddings and subsequently verifying the attack models post-publication. Through the analysis of the recent watermarking strategy for EaaS, EmbMarker, we design a novel CSE (Clustering, Selection, Elimination) attack that removes the backdoor watermark while maintaining the high utility of embeddings, indicating that the previous watermarking approach can be breached. In response to this new threat, we propose a new protocol to make the removal of watermarks more challenging by incorporating multiple possible watermark directions. Our defense approach, WARDEN, notably increases the stealthiness of watermarks and empirically has been shown effective against CSE attack.
