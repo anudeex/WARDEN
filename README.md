@@ -1,5 +1,5 @@
 # WARDEN
-Code of our paper - "WARDEN: Multi-Directional Backdoor Watermarks for Embedding-as-a-Service Copyright Protection" (to appear in ACL 2024).
+Code of our paper - "WARDEN: Multi-Directional Backdoor Watermarks for Embedding-as-a-Service Copyright Protection" (Accepted to ACL 2024).
 
 **arXiv (Pre-print) version: [link](https://arxiv.org/abs/2403.01472)**
 
