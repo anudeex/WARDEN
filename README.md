@@ -51,10 +51,21 @@ Our code is based on the work of [EmbMarker](https://github.com/yjw1029/EmbMarke
 ## Citing
 
 ```
-@article{shetty2024warden,
-  title={WARDEN: Multi-Directional Backdoor Watermarks for Embedding-as-a-Service Copyright Protection},
-  author={Shetty, Anudeex and Teng, Yue and He, Ke and Xu, Qiongkai},
-  journal={arXiv preprint arXiv:2403.01472},
-  year={2024}
+@inproceedings{shetty-etal-2024-warden,
+    title = "{WARDEN}: Multi-Directional Backdoor Watermarks for Embedding-as-a-Service Copyright Protection",
+    author = "Shetty, Anudeex  and
+      Teng, Yue  and
+      He, Ke  and
+      Xu, Qiongkai",
+    editor = "Ku, Lun-Wei  and
+      Martins, Andre  and
+      Srikumar, Vivek",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-long.725",
+    pages = "13430--13444",
 }
 ```
